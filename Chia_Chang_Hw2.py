@@ -4,6 +4,12 @@ import re
 import heapq
 from urllib.request import urlopen
 
+
+def ReturnNum(a):
+    return a[1]
+
+
+
 def process():
     with urlopen("http://icarus.cs.weber.edu/~hvalle/cs3030/data/error.log.full") as log:
         error_dict = dict()
@@ -14,7 +20,7 @@ def process():
             checkparts = parts[2] #string to be check
         
            # pat = re.compile('/[\w+/.-]+')#test from that site
-            match = re.search('/[\w+/._~-]+',parts[2])
+            match = re.search('/[a-zA-Z][\w+/._~-]+',parts[2])
             if match:
                 errorpath = match.group()
                 
@@ -23,11 +29,13 @@ def process():
                 else:
                     error_dict[errorpath] += 1
             
-
-        if "/var/www/html/_c21_" in error_dict:
-            print("Yes" , error_dict["/var/www/html/_c21_"])
-        else:
-            print("no")
+        error_list = list(error_dict.items())
+        sort_list = sorted(error_list, key=ReturnNum)
+        sort_list.reverse()
+        
+        print("*** Top 25 page errors ***")
+        for i in range(25):
+            print("Count: ", sort_list[i][1], "  ", "Page:  ", sort_list[i][0])
 
         
 def main():
