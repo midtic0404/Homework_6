@@ -1,3 +1,13 @@
+"""
+This program takes a url as parameter
+Arg:
+    A web link
+Result:
+    print out the top 25 errors from the error log
+
+"""
+
+
 #!/usr/bin/env python3
 import sys
 import re
@@ -6,12 +16,31 @@ from urllib.request import urlopen
 
 
 def ReturnNum(a):
+    """
+    For use in sorting the list
+    """
     return a[1]
 
 
+def help():
+    """
+    Prompt to user to enter a url for parameter
+    """
+    print("Please enter the url as parameter")
 
-def process():
-    with urlopen("http://icarus.cs.weber.edu/~hvalle/cs3030/data/error.log.full") as log:
+
+
+def process(url):
+    """
+    Process that take a url link with error logs and print out
+    the top 25 errors from the log
+
+    Arg:
+        a url link
+    Result:
+        print out the top 25 errors
+    """
+    with urlopen(url) as log:
         error_dict = dict()
         wordsArray = [] #big list storing each line as list
         for line in log:
@@ -19,7 +48,7 @@ def process():
             parts = words.partition('client')
             checkparts = parts[2] #string to be check
         
-           # pat = re.compile('/[\w+/.-]+')#test from that site
+           
             match = re.search('/[a-zA-Z][\w+/._~-]+',parts[2])
             if match:
                 errorpath = match.group()
@@ -38,10 +67,16 @@ def process():
             print("Count: ", sort_list[i][1], "  ", "Page:  ", sort_list[i][0])
 
         
-def main():
-    process()
+def main(url):
+    """
+    Main to run the process
+    """
+    process(url)
 
 
 if __name__ == "__main__":
-    main()
-    exit(0)
+    if len(sys.argv) == 1:
+        help()
+    else:
+        main(sys.argv[1])
+        exit(0)
